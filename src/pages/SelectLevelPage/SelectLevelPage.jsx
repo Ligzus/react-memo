@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./SelectLevelPage.module.css";
 
 export function SelectLevelPage() {
@@ -8,6 +8,10 @@ export function SelectLevelPage() {
 
   const handleLevelClick = pairsCount => {
     navigate(`/game/${pairsCount}?easyMode=${isEasyMode}`);
+  };
+
+  const handleLeaderboardClick = () => {
+    navigate(`/leaderboard`);
   };
 
   return (
@@ -38,6 +42,9 @@ export function SelectLevelPage() {
             <span className={styles.checkmark}></span>
           </label>
         </div>
+        <Link className={styles.leaderboardLink} onClick={() => handleLeaderboardClick()}>
+          Перейти к лидерборду
+        </Link>
       </div>
     </div>
   );

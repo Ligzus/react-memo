@@ -71,6 +71,7 @@
   font-family: StratosSkyeng;
   font-size: 18px;
   font-style: normal;
+  margin-bottom: 30px;
 }
 
 .checkboxContainer input[type="checkbox"] {
@@ -126,4 +127,14 @@
   border: solid white;
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
+}
+
+.leaderboardLink {
+  color: #0080c1;
+  font-family: StratosSkyeng;
+  font-size: 18px;
+}
+
+.leaderboardLink:hover {
+  color: #004980;
 }
