@@ -70,3 +70,20 @@
 
   margin-bottom: -12px;
 }
+
+.attempts {
+  height: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+  text-align: center;
+  font-family: StratosSkyeng;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.attempts span {
+  font-size: 18px;
+}
