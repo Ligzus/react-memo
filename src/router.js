@@ -2,25 +2,34 @@ import { createBrowserRouter } from "react-router-dom";
 import { GamePage } from "./pages/GamePage/GamePage";
 import { SelectLevelPage } from "./pages/SelectLevelPage/SelectLevelPage";
 import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage";
+import { EasyModeProvider } from "./context/EasyModeContext";
 
 export const router = createBrowserRouter(
   [
     {
       path: "/",
-      element: <SelectLevelPage />,
+      element: (
+        <EasyModeProvider>
+          <SelectLevelPage />
+        </EasyModeProvider>
+      ),
     },
     {
       path: "/game/:pairsCount",
-      element: <GamePage />,
+      element: (
+        <EasyModeProvider>
+          <GamePage />
+        </EasyModeProvider>
+      ),
     },
     {
       path: "/leaderboard",
-      element: <LeaderboardPage />,
+      element: (
+        <EasyModeProvider>
+          <LeaderboardPage />
+        </EasyModeProvider>
+      ),
     },
   ],
-  /**
-   * basename нужен для корректной работы в gh pages
-   * он же указан в homepage package.json и в index.html
-   */
   { basename: "/react-memo" },
 );

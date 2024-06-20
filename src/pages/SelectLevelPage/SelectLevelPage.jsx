@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./SelectLevelPage.module.css";
+import { useEasyMode } from "../../context/useEasyMode";
 
 export function SelectLevelPage() {
-  const [isEasyMode, setIsEasyMode] = useState(false);
+  const { isEasyMode, setIsEasyMode } = useEasyMode();
   const navigate = useNavigate();
 
   const handleLevelClick = pairsCount => {
-    navigate(`/game/${pairsCount}?easyMode=${isEasyMode}`);
+    navigate(`/game/${pairsCount}`);
   };
 
   const handleLeaderboardClick = () => {
