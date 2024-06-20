@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
-// import { Leaderboard } from "../../components/Leaderboard/Leaderboard";
+import { Leaderboard } from "../../components/Leaderboard/Leaderboard";
 import styles from "./LeaderboardPage.module.css";
 
 export function LeaderboardPage() {
@@ -12,7 +12,7 @@ export function LeaderboardPage() {
         <h1 className={styles.title}>Лидерборд</h1>
         <Button children={"Начать игру"} onClick={() => navigate("/")} />
       </div>
-      {/* <Leaderboard /> */}
+      <Leaderboard />
     </>
   );
 }

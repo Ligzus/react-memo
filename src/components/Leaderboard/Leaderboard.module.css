@@ -1,0 +1,50 @@
+.leaderboard {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.leaderboard h2 {
+  margin-bottom: 10px;
+}
+
+.leaderboard ul {
+  list-style-type: none;
+  width: 92%;
+  padding: 0;
+}
+
+.leaderboard .leader {
+  color: #000000;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 20px;
+  margin-bottom: 15px;
+  border-radius: 11px;
+}
+
+.leaderboard ul div span {
+  color: #999999;
+  width: 30%;
+}
+
+.leaderboard ul div span:nth-of-type(2) {
+  text-align: center;
+}
+
+.leaderboard ul div span:nth-of-type(3) {
+  text-align: end;
+}
+
+.leaderboard ul li span {
+  width: 30%;
+}
+
+.leaderboard ul li span:nth-of-type(2) {
+  text-align: center;
+}
+
+.leaderboard ul li span:nth-of-type(3) {
+  text-align: end;
+}

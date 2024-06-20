@@ -78,7 +78,6 @@
   display: none;
 }
 
-
 .checkboxContainer {
   display: inline-block;
   position: relative;
@@ -104,9 +103,8 @@
   background-color: #ccc;
 }
 
-
 .checkboxContainer input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 .checkboxContainer .checkmark:after {
