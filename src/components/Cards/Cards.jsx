@@ -1,3 +1,4 @@
+// Компонент Cards.jsx (основной игровой компонент):
 import { shuffle } from "lodash";
 import { useEffect, useState } from "react";
 import { generateDeck } from "../../utils/cards";
@@ -61,9 +62,35 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
   // Количество оставшихся попыток в упрощенном режиме
   const [attemptsLeft, setAttemptsLeft] = useState(3);
 
+  // Имя игрока
+  const [playerName, setPlayerName] = useState("");
+  // Состояние модального окна
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   function finishGame(status = STATUS_LOST) {
     setGameEndDate(new Date());
     setStatus(status);
+
+    if (status === STATUS_WON && pairsCount === 9) {
+      setIsModalOpen(true);
+    }
+  }
+
+  function handleGameEnd() {
+    const totalSeconds = timer.minutes * 60 + timer.seconds;
+    const leaderData = { name: playerName || "Пользователь", time: totalSeconds };
+
+    fetch("https://wedev-api.sky.pro/api/leaderboard", {
+      method: "POST",
+      body: JSON.stringify(leaderData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error("Ошибка отправки данных о рекорде:", error);
+      });
   }
 
   function startGame() {
@@ -80,6 +107,8 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
     setTimer(getTimerValue(null, null));
     setStatus(STATUS_PREVIEW);
     setAttemptsLeft(3);
+    setIsModalOpen(false);
+    setPlayerName("");
   }
 
   /**
@@ -238,6 +267,12 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
             gameDurationSeconds={timer.seconds}
             gameDurationMinutes={timer.minutes}
             onClick={resetGame}
+            playerName={playerName}
+            setPlayerName={setPlayerName}
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            handleGameEnd={handleGameEnd}
+            pairsCount={pairsCount}
           />
         </div>
       ) : null}
