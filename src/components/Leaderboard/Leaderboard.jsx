@@ -24,7 +24,7 @@ export function Leaderboard() {
         </div>
         {leaders.map((leader, index) => (
           <li key={leader.id} className={styles.leader}>
-            <span>#{index + 1}</span>
+            <span># {index + 1}</span>
             <span>{leader.name}</span>
             <span>{leader.time} сек.</span>
           </li>
