@@ -38,7 +38,7 @@ export function SelectLevelPage() {
         <div className={styles.easyModeToggle}>
           <label className={styles.checkboxContainer}>
             <input type="checkbox" checked={isEasyMode} onChange={e => setIsEasyMode(e.target.checked)} />
-            Легкий режим
+            Легкий режим (3 жизни)
             <span className={styles.checkmark}></span>
           </label>
         </div>
