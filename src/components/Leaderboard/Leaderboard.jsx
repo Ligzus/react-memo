@@ -5,7 +5,7 @@ export function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
-    fetch("https://wedev-api.sky.pro/api/leaderboard")
+    fetch("https://wedev-api.sky.pro/api/v2/leaderboard")
       .then(response => response.json())
       .then(data => {
         const sortedLeaders = data.leaders.sort((a, b) => a.time - b.time);
@@ -20,12 +20,14 @@ export function Leaderboard() {
         <div className={styles.leader}>
           <span>Позиция</span>
           <span>Пользователь</span>
+          <span>Достижения</span>
           <span>Время</span>
         </div>
         {leaders.map((leader, index) => (
           <li key={leader.id} className={styles.leader}>
             <span># {index + 1}</span>
             <span>{leader.name}</span>
+            <span>{leader.achievements}</span>
             <span>{leader.time} сек.</span>
           </li>
         ))}
