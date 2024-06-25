@@ -1,4 +1,3 @@
-// Компонент Cards.jsx (основной игровой компонент):
 import { shuffle } from "lodash";
 import { useEffect, useState } from "react";
 import { generateDeck } from "../../utils/cards";
@@ -67,6 +66,16 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
   // Состояние модального окна
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Состояния для суперсил
+  const [insightUsed, setInsightUsed] = useState(false); // Прозрение
+  const [alohomoraUsed, setAlohomoraUsed] = useState(false); // Алохомора
+
+  // Состояние для таймера суперсилы
+  const [timerInterval, setTimerInterval] = useState(null);
+
+  // Состояние для отображения суперсил
+  const [showSuperPowers, setShowSuperPowers] = useState(false);
+
   function finishGame(status = STATUS_LOST) {
     setGameEndDate(new Date());
     setStatus(status);
@@ -99,6 +108,9 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
     setGameStartDate(startDate);
     setTimer(getTimerValue(startDate, null));
     setStatus(STATUS_IN_PROGRESS);
+
+    // Показываем суперсилы
+    setShowSuperPowers(true);
   }
 
   function resetGame() {
@@ -109,6 +121,13 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
     setAttemptsLeft(3);
     setIsModalOpen(false);
     setPlayerName("");
+    setInsightUsed(false);
+    setAlohomoraUsed(false);
+    setShowSuperPowers(false);
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      setTimerInterval(null);
+    }
   }
 
   /**
@@ -211,10 +230,83 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
     const intervalId = setInterval(() => {
       setTimer(getTimerValue(gameStartDate, gameEndDate));
     }, 300);
+    setTimerInterval(intervalId);
     return () => {
       clearInterval(intervalId);
     };
   }, [gameStartDate, gameEndDate]);
+
+  // Обработчик для суперсилы "Прозрение"
+  const useInsight = () => {
+    if (insightUsed || isGameEnded || status !== STATUS_IN_PROGRESS) {
+      return;
+    }
+
+    setInsightUsed(true);
+
+    const previouslyOpenCards = cards.filter(card => card.open);
+
+    const allCardsOpen = cards.map(card => ({ ...card, open: true }));
+    setCards(allCardsOpen);
+
+    clearInterval(timerInterval);
+    setTimerInterval(null);
+
+    const resumeTime = new Date();
+
+    setTimeout(() => {
+      const restoredCards = cards.map(card =>
+        previouslyOpenCards.some(openCard => openCard.id === card.id) ? card : { ...card, open: false },
+      );
+      setCards(restoredCards);
+      setGameStartDate(new Date(gameStartDate.getTime() + (new Date() - resumeTime)));
+      const intervalId = setInterval(() => {
+        setTimer(getTimerValue(gameStartDate, gameEndDate));
+      }, 300);
+      setTimerInterval(intervalId);
+    }, 5000);
+  };
+
+  // Обработчик для суперсилы "Алохомора"
+  const useAlohomora = () => {
+    if (alohomoraUsed || isGameEnded || status !== STATUS_IN_PROGRESS) {
+      return;
+    }
+
+    setAlohomoraUsed(true);
+
+    const closedCards = cards.filter(card => !card.open);
+    const pairs = {};
+
+    closedCards.forEach(card => {
+      const key = `${card.suit}-${card.rank}`;
+      if (!pairs[key]) {
+        pairs[key] = [];
+      }
+      pairs[key].push(card);
+    });
+
+    const pairKeys = Object.keys(pairs).filter(key => pairs[key].length >= 2);
+
+    if (pairKeys.length === 0) {
+      return;
+    }
+
+    const randomKey = pairKeys[Math.floor(Math.random() * pairKeys.length)];
+    const randomPair = pairs[randomKey].slice(0, 2);
+
+    const updatedCards = cards.map(card =>
+      randomPair.some(pairCard => pairCard.id === card.id) ? { ...card, open: true } : card,
+    );
+
+    setCards(updatedCards);
+
+    const isPlayerWon = updatedCards.every(card => card.open);
+
+    if (isPlayerWon) {
+      finishGame(STATUS_WON);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -239,13 +331,25 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
             </>
           )}
         </div>
-        {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
-        {easyMode && status === STATUS_IN_PROGRESS ? (
-          <div className={styles.attempts}>
-            <p>Попыток осталось:</p>
-            <span>{attemptsLeft}</span>
+
+        {showSuperPowers && (
+          <div className={styles.superPowers}>
+            <button onClick={useInsight} disabled={insightUsed || isGameEnded || status !== STATUS_IN_PROGRESS}>
+              <img src={`${process.env.PUBLIC_URL}/insight.png`} alt="Прозрение" />
+            </button>
+            <button onClick={useAlohomora} disabled={alohomoraUsed || isGameEnded || status !== STATUS_IN_PROGRESS}>
+              <img src={`${process.env.PUBLIC_URL}/alohomora.png`} alt="Алохомора" />
+            </button>
           </div>
-        ) : null}
+        )}
+        <div>
+          {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
+          {easyMode && status === STATUS_IN_PROGRESS ? (
+            <div className={styles.attempts}>
+              <p>Попыток осталось: {attemptsLeft}</p>
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <div className={styles.cards}>
