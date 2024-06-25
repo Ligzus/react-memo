@@ -89,9 +89,23 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, easyMode = false }) 
     const totalSeconds = timer.minutes * 60 + timer.seconds;
     const leaderData = { name: playerName || "Пользователь", time: totalSeconds };
 
-    fetch("https://wedev-api.sky.pro/api/leaderboard", {
+    let achievements = [];
+
+    if (status === STATUS_WON) {
+      if (!easyMode && !insightUsed && !alohomoraUsed) {
+        achievements = [1, 2];
+      } else if (!easyMode && (insightUsed || alohomoraUsed)) {
+        achievements = [1];
+      } else if (easyMode && !insightUsed && !alohomoraUsed) {
+        achievements = [2];
+      }
+    }
+
+    const leaderWithAchievements = { ...leaderData, achievements };
+
+    fetch("https://wedev-api.sky.pro/api/v2/leaderboard", {
       method: "POST",
-      body: JSON.stringify(leaderData),
+      body: JSON.stringify(leaderWithAchievements),
     })
       .then(response => response.json())
       .then(data => {
