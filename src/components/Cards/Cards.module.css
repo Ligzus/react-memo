@@ -28,7 +28,7 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: center;
   margin-bottom: 35px;
 }
 
@@ -69,4 +69,27 @@
   line-height: 32px;
 
   margin-bottom: -12px;
+}
+
+.attempts {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+  text-align: center;
+  font-family: StratosSkyeng;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.attempts p {
+  margin-top: 10px;
+}
+
+.superPowers button {
+  cursor: pointer;
+  background: none;
+  border: none;
 }
